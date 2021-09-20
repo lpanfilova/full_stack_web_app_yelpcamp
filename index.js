@@ -1,6 +1,7 @@
 
 //including node.js modules
 const express = require('express');
+//path module joins multiple paths together
 const path = require('path');
 const mongoose = require('mongoose');
 const campground = require('./models/campground')
@@ -18,17 +19,21 @@ db.once("open", () => {
 //response object
 const app = express();
 
+//using ejs
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+//joining current directory with /views
+app.set('views', path.join(__dirname, '/views'));
 
+//routes are matched in order
 //routing for home page, first arg is path
 app.get('/', (req, res) => {
+    //renders home.ejs
     res.render('home')
 })
 
 //routing for making a new camp ground, first arg is path
-app.get('/makecampground', (req, res) => {
-    const camp = new campground({
+app.get('/makecampground', async(req, res) => {
+    const camp = new Campground({
         title: 'My Backyard', 
         description: 'Nice place',
         price: 0
