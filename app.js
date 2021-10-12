@@ -6,9 +6,14 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const ExpressError =require('./utils/ExpressError');
 const methodOverride = require('method-override');
+const passport = require('passport');
+//require("./app/config/passport.js")(passport);
+const LocalStrategy = require('passport-local');
+const User = require('./models/user');
 
-const campgrounds = require('./routes/campgrounds');
-const reviews = require('./routes/reviews')
+const userRoutes = require('./routes/users');
+const campgroundRoutes = require('./routes/campgrounds');
+const reviewRoutes = require('./routes/reviews')
 
 //connecting database
 mongoose.connect('mongodb://localhost:27017/yelp_camp', {});
@@ -44,18 +49,27 @@ const sessionConfig = {
 }
 app.use(session(sessionConfig));
 app.use(flash());
+//authorization with passport
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     next();
 })
-app.use('/campgrounds', campgrounds);
-app.use('/campgrounds/:id/reviews', reviews);
+
+app.use('/', userRoutes)
+app.use('/campgrounds', campgroundRoutes);
+app.use('/campgrounds/:id/reviews', reviewRoutes);
 app.use(express.static(path.join(__dirname, 'public')));
 
 //setting up routes, routes are matched in order
 app.get('/', (req, res) => {
-    //renders home.ejs
     res.render('home')
 });
 
@@ -70,7 +84,6 @@ app.use((err, req, res, next) =>{
 });
 
 
-//start a server
 app.listen(3000, ()=> {
     console.log('Listening on port 3000')
 });
