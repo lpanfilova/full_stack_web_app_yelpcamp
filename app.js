@@ -7,9 +7,9 @@ const flash = require('connect-flash');
 const ExpressError =require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const passport = require('passport');
-//require("./app/config/passport.js")(passport);
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
+const mongoSanitize = require('express-mongo-sanitize');
 
 const userRoutes = require('./routes/users');
 const campgroundRoutes = require('./routes/campgrounds');
@@ -67,6 +67,7 @@ app.use('/', userRoutes)
 app.use('/campgrounds', campgroundRoutes);
 app.use('/campgrounds/:id/reviews', reviewRoutes);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(mongoSanitize());
 
 //setting up routes, routes are matched in order
 app.get('/', (req, res) => {

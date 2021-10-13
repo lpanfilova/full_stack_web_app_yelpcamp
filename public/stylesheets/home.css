@@ -1,0 +1,32 @@
+body {
+    height: 100vh;
+    background-size: cover;
+    background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
+    url('/images/bg_image.jpg');
+}
+
+.cover-container {
+    max-width: 60wh;
+}
+
+.nav-link {
+    padding: 0.25rem 0;
+    color: rgba(255,255,255,0.65);
+    margin-left: 1rem;
+    border-bottom: 0.15rem solid transparent;
+}
+
+.nav-link:hover {
+    color: rgba(255,255,255);
+    border-bottom-color: rgba(255,255,255);
+}
+
+.nav-link.active {
+    color: rgba(255,255,255);
+}
+
+#center_button:link, #center_button:active, 
+#center_button:hover, #center_button:visited{
+    color: black;
+    font-weight: 500;
+}
