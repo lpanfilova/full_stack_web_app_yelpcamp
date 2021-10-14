@@ -31,6 +31,8 @@
 
   <!--Reviews-->
   <div class="col-6">
+
+    <% if(currentUser) {%> 
     <h2 class="mt-0">Leave a review</h2>
       <form action="/campgrounds/<%=campground._id%>/reviews" method="POST" class="needs-validation mb-3" novalidate>
         <div class="mb-3">
@@ -45,15 +47,21 @@
         </div>
         <button class="btn btn-success">Add review</button>
       </form>
+    <% } %> 
 
       <% for (let review of campground.reviews) {%>
         <div class="card mb-3">
           <div class="card-body">
             <h5 class="card-title">Rating: <%= review.rating %></h5>
+            <% if(review.author) {%> 
+            <p class="card-subtitle mb-2 text-muted">By <%= review.author.username %> </p>
+            <% } %> 
             <p class="card-text">Review: <%= review.body %></p>
+            <% if(currentUser && review.author && review.author.username === currentUser.username) {%> 
             <form action="/campgrounds/<%= campground._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
               <button class="btn btn-sm btn-danger">Delete</button>
             </form>
+            <% } %> 
           </div>
         </div>
       <%  } %>
